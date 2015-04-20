@@ -1,0 +1,9 @@
+Package: com.cuit.locationdtweak
+Name: locationdtweak
+Depends: mobilesubstrate
+Version: 0.0.1
+Architecture: iphoneos-arm
+Description: An awesome MobileSubstrate tweak!
+Maintainer: panda
+Author: panda
+Section: Tweaks

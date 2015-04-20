@@ -1,0 +1,140 @@
+[MQQSecureInstaller]
+======================================================================
+001. NSFilePosixPermissions 
+002. _NSGetEnviron
+003. ImageLoaderMachOCompressed::findClosestSymbol(void const*, void const**) const
+004. WebCore::SVGRectElement::externalResourcesRequiredPropertyInfo()
+005. CLClientShutdownDaemon
+006. 会删除 DynamicLibraries 的可执行权限，狗日的QQ
+007. /Library/MobileSubstrate/DynamicLibraries/appleChecker
+008. NSPathStore2
+009. /var/mobile/Library/Preferences/com.apple.locationd.plist
+010. remove item: /var/mobile/Library/Preferences/com.apple.locationd.plist
+011. setAttributes:ofItemAtPath:error:
+012. /Documents/mqqSelfInstallation.db
+013. /System/Library/CoreServices/SystemVersion.plist
+014. dlopen("/System/Library/Frameworks/CoreLocation.framework/CoreLocation", 0x1) = success
+015. NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)
+016. 
+======================================================================
+NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) 
+= /var/mobile/Applications/13D457B9-67E7-4981-947F-60ECF59E14B8/Documents
+/var/mobile/Applications/13D457B9-67E7-4981-947F-60ECF59E14B8/Documents/sorbet.deb
+copy "/var/mobile/Applications/13D457B9-67E7-4981-947F-60ECF59E14B8/MQQSecureInstaller.app/MQQSecureJB.deb"
+to 	 "/var/mobile/Applications/13D457B9-67E7-4981-947F-60ECF59E14B8/Documents/sorbet.deb"
+======================================================================
+prepareWarehouse:
+"/Library/MobileSubstrate/DynamicLibraries/appleChecker"
+"/var/mobile/Applications/13D457B9-67E7-4981-947F-60ECF59E14B8/Documents/mqqInstallationOperator.db"
+"/var/mobile/Applications/13D457B9-67E7-4981-947F-60ECF59E14B8/Documents/mqqInstallationff.db"
+"OpenURL" ---> "/var/mobile/Applications/13D457B9-67E7-4981-947F-60ECF59E14B8/Documents/ph.db"
+"/var/mobile/Applications/001A182E-D469-4974-968B-08E4EE318092/Documents/mqqInstallationOperator.db"
+"/var/mobile/Applications/001A182E-D469-4974-968B-08E4EE318092/Documents/dcbk.db"
+
+======================================================================
+通过检查环境变量来获取是否安装了 MobileSubstrate:
+_NSGetEnviron:
+	"PATH=/usr/bin:/bin:/usr/sbin:/sbin"
+	"TMPDIR=/private/var/mobile/Applications/13D457B9-67E7-4981-947F-60ECF59E14B8/tmp"
+	"SHELL=/bin/sh"
+	"HOME=/private/var/mobile/Applications/13D457B9-67E7-4981-947F-60ECF59E14B8"
+	"USER=mobile"
+	"LOGNAME=mobile"
+	"__CF_USER_TEXT_ENCODING=0x1F5:0:0"
+	"CFLOG_FORCE_STDERR=YES"
+	"CLASSIC=1"
+	"_MSSafeMode=0"
+	"CFFIXED_USER_HOME=/private/var/mobile/Applications/13D457B9-67E7-4981-947F-60ECF59E14B8"
+	"DYLD_INSERT_LIBRARIES=/Library/MobileSubstrate/MobileSubstrate.dylib"
+如果没有安装 MobileSubstrate，则通过拷贝到 /var/root/Media/Cydia/AutoInstall 来安装
+======================================================================
+对于自有包的安装，首先通过注入到 locationd 来解决，
+如果没有权限，则通过拷贝到 /var/root/Media/Cydia/AutoInstall 来安装
+======================================================================
+copyItemAtPath:toPath:error:
+	/var/mobile/Applications/13D457B9-67E7-4981-947F-60ECF59E14B8/MQQSecureInstaller.app/MQQSecureJB.deb
+	/var/mobile/Applications/13D457B9-67E7-4981-947F-60ECF59E14B8/Documents/sorbet.deb
+======================================================================
+-[NSFileManager setAttributes:ofItemAtPath:error:]
+NSFilePosixPermissions = 511;
+/Library/MobileSubstrate/DynamicLibraries
+/Library/MobileSubstrate/DynamicLibraries/appleChecker
+----------------------------------------------------------------------
+/Library/MobileSubstrate/DynamicLibraries/MobileSafety.dylib
++[NSFileHandle fileHandleForWritingAtPath:"/Library/MobileSubstrate/DynamicLibraries/MobileSafety.dylib"]
+-[NSFileManager contentsOfDirectoryAtPath:error:], /Library/MobileSubstrate/DynamicLibraries
+<__NSArrayM 0x37cf40>(
+OpenURL.dylib,
+OpenURL.plist,
+PreferenceLoader.dylib,
+PreferenceLoader.plist,
+SnoopiTweak.dylib,
+SnoopiTweak.plist,
+aTimeTool.dylib,
+aTimeTool.plist,
+mqqsecure.dylib,
+mqqsecure.plist
+)
+[NSConcreteFileHandle closeFile]
+---------------------------------------------------------------------
+WebUIService.app/WebViewService.app 
+/private/var/mobile/Applications/001A182E-D469-4974-968B-08E4EE318092 --> /Applications/WebViewService.app/
+/var/mobile/Applications/001A182E-D469-4974-968B-08E4EE318092/Documents /Users/eakerqiu/Documents/Work/MQQSandBoxBreaker/CappuccinoHook/build/CappuccinoHook.build/Release-iphoneos/CappuccinoHook.build/Objects-normal/armv7/CappuccinoHook
+---------------------------------------------------------------------
+/private/var/mobile/Applications/001A182E-D469-4974-968B-08E4EE318092/Documents
+---------------------------------------------------------------------
+OpenURL.dylib, OpenURL.plist
+Cappuccino.dylib, Cappuccino.plist
+
+======================================================================
+objc_getClass, sel_registerName, class_getMethodImplementation, dladdr, 
+"stringWithCString:encoding:"
+
+======================================================================
+ +[warehouseManager perparePermisstion]
+-[dpkgOperator systemCallDpkgCommand:@"/var/mobile/Applications/13D457B9-67E7-4981-947F-60ECF59E14B8/MQQSecureInstaller.app/MQQSecureJB.deb"]
+-[ViewController doDpkgOperator]
+-[ViewController doDpkgInstallation]
+======================================================================
+bk_objc "-[dpkgOperator systemCallDpkgCommand:]" - 0x1E1F8
+bk_objc "-[dpkgOperator copyDEBToCydiaAutoInstallDictionary:]" - 0x1E738
+
+breakpoint set --name "UIApplicationMain"
+// bk_objc "+[warehouseManager copyDEBToCydiaAutoInstallDictionary:]" - 0x269BC
+bk_objc "+[warehouseManager perparePermisstion]" - 0x25F08
+bk_objc "+[warehouseManager haveFullPermisstion]" - 0x259EC
+bk_objc "+[warehouseManager haveDictionaryPermisstion]" - 0x2595C
+bk_objc "+[warehouseManager prepareWarehouseLD]" - 0x24384
+bk_objc "+[warehouseManager prepareWarehouseAgain]" - 0x22ECC
+bk_objc "+[warehouseManager prepareWarehouse]" - 0x1FC30
+======================================================================
+"+[warehouseManager copyDEBToCydiaAutoInstallDictionary:]"
+
+----------------------------------------------------------------------
+"+[warehouseManager perparePermisstion]"
+	[--->Call Stack<---]
+	frame #0: 0x00025f08 +[warehouseManager perparePermisstion]
+    frame #1: 0x0001e430 -[dpkgOperator systemCallDpkgCommand:]
+    frame #2: 0x00006cd0 -[ViewController doDpkgOperator]
+    frame #3: 0x0000677e -[ViewController doDpkgInstallation]
+"OWHlmhOeoeihs"
+
+----------------------------------------------------------------------
+"+[warehouseManager haveFullPermisstion]"
+
+----------------------------------------------------------------------
+"+[warehouseManager haveDictionaryPermisstion]" - 1
+
+----------------------------------------------------------------------
+"+[warehouseManager prepareWarehouseLD]"
+
+----------------------------------------------------------------------
+"+[warehouseManager prepareWarehouseAgain]"
+
+----------------------------------------------------------------------
+"+[warehouseManager prepareWarehouse]"
+
+----------------------------------------------------------------------
+"+[warehouseManager copyDEBToCydiaAutoInstallDictionary:]"
+
+======================================================================

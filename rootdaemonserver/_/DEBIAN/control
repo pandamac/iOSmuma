@@ -1,0 +1,11 @@
+Package: com.cuit.rootdaemonserver
+Name: rootdaemonserver
+Depends: 
+Architecture: iphoneos-arm
+Description: An awesome tool of some sort!!
+Maintainer: panda
+Author: panda
+Section: System
+Tag: role::hacker
+Version: 0.0.1-56
+Installed-Size: 56
