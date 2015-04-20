@@ -10,3 +10,4 @@
 *.out
 *.stamp
 *.deb
+obj/*
