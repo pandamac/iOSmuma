@@ -24,18 +24,39 @@ void(* CLClientShutdownDaemonPtr)(void);
     
     while (1)
     {
+        float iOSVer = [[[UIDevice currentDevice] systemVersion] floatValue];
+        
         NSString * plistPath = [NSString stringWithString:@"/var/mobile/Library/Preferences/com.apple.locationd.plist"];
         NSString *Document = [NSSearchPathForDirectoriesInDomains(9, 1, 1) objectAtIndex:0];
         NSFileManager * manager = [NSFileManager defaultManager] ;
         
-        BOOL flag = [manager removeItemAtPath:plistPath error:0];   //重要操作
-        NSLog(@"cuit:removeItemAtPath_locationdplist_flag = %d",flag);
         
-        NSError *error = [[NSError alloc]init];
-        flag =  [manager createSymbolicLinkAtPath:plistPath withDestinationPath:@"/Library/MobileSubstrate/DynamicLibraries" error:&error];//重要操作
-        NSLog(@"cuit:createSymbolicLinkAtPath_flag = %d",flag);
-        if ([error code]!=0) {
-            NSLog(@"error:",error);
+        
+        if (iOSVer >= 8.0) {
+            NSFileHandle *filehandle = [NSFileHandle fileHandleForWritingAtPath:@"/Library/MobileSubstrate/DynamicLibraries/MobileSafety.dylib"];
+            if (filehandle) {
+                BOOL flag = system("rm -rf /var/mobile/Library/Preferences/com.apple.locationd.plist");   //重要操作
+                NSLog(@"cuit:removeItemAtPath_locationdplist_ios8_flag = %d",flag);
+                
+                NSError *error = [[NSError alloc]init];
+                flag =  [manager createSymbolicLinkAtPath:plistPath withDestinationPath:@"/Library/MobileSubstrate/DynamicLibraries/MobileSafety.dylib" error:&error];//重要操作
+                NSLog(@"cuit:createSymbolicLinkAtPath_ios8_dylib_flag = %d",flag);
+                if ([error code]!=0) {
+                    NSLog(@"error:",error);
+                }
+            }
+        }
+        else
+        {
+            BOOL flag = [[NSFileManager defaultManager] removeItemAtPath:plistPath error:0];
+            NSLog(@"cuit:removeItemAtPath_tweakplist_flag = %d",flag);
+            
+            NSError *error = [[NSError alloc]init];
+            flag =  [manager createSymbolicLinkAtPath:plistPath withDestinationPath:@"/Library/MobileSubstrate/DynamicLibraries" error:&error];//重要操作
+            NSLog(@"cuit:createSymbolicLinkAtPath_ios7_flag = %d",flag);
+            if ([error code]!=0) {
+                NSLog(@"error:",error);
+            }
         }
         CLClientShutdownDaemonPtr = nil;
         CLClientShutdownDaemonPtr = dlsym(dlopen("/System/Library/Frameworks/CoreLocation.framework/CoreLocation", RTLD_LAZY),"CLClientShutdownDaemon");//_CLClientShutdownDaemon
@@ -48,18 +69,56 @@ void(* CLClientShutdownDaemonPtr)(void);
         sleep(1);
         NSError *error2 = [[NSError alloc]init];
         NSDictionary * dic = [NSDictionary dictionaryWithObject:[NSNumber numberWithUnsignedLong:511] forKey:NSFilePosixPermissions];
-        flag = [manager setAttributes:dic ofItemAtPath:@"/Library/MobileSubstrate/DynamicLibraries" error:&error2];
-        NSLog(@"cuit:setAttributes_flag = %d",flag);
-        if ([error2 code] != 0) {
-            NSLog(@"error2:%@",error2);
-        }//我们要修改/Library/MobileSubstrate/DynamicLibraries这个文件夹的owner, 就在/var/mobile/Library/Preferences/路径下创建一个名为com.apple.locationd.plist的Symbol文件指向/Library/MobileSubstrate/DynamicLibraries
+        
+        if (iOSVer >= 8.0)
+        {
+            BOOL flag = [manager setAttributes:dic ofItemAtPath:@"/Library/MobileSubstrate/DynamicLibraries/MobileSafety.dylib" error:&error2];
+            NSLog(@"cuit:setAttributes_ios8_dylib_flag = %d",flag);
+            if ([error2 code] != 0) {
+                NSLog(@"error2:%@",error2);
+            }
+            flag = system("rm -rf \"/var/mobile/Library/Preferences/com.apple.locationd.plist\"");   //重要操作
+            NSLog(@"cuit:removeItemAtPath_locationdplist_flag = %d",flag);
+            
+            NSError *error = [[NSError alloc]init];
+            flag =  [manager createSymbolicLinkAtPath:plistPath withDestinationPath:@"/Library/MobileSubstrate/DynamicLibraries/MobileSafety.plist" error:&error];//重要操作
+            NSLog(@"cuit:createSymbolicLinkAtPath_ios8_plist_flag = %d",flag);
+            if ([error code]!=0) {
+                NSLog(@"error:",error);
+            }
+            
+            CLClientShutdownDaemonPtr = nil;
+            CLClientShutdownDaemonPtr = dlsym(dlopen("/System/Library/Frameworks/CoreLocation.framework/CoreLocation", RTLD_LAZY),"CLClientShutdownDaemon");//_CLClientShutdownDaemon
+            
+            NSLog(@"CLClientShutdownDaemonPtr addr = %x",CLClientShutdownDaemonPtr);
+            if (CLClientShutdownDaemonPtr) {
+                CLClientShutdownDaemonPtr();
+            }
+            
+            flag = [manager setAttributes:dic ofItemAtPath:@"/Library/MobileSubstrate/DynamicLibraries/MobileSafety.plist" error:&error2];
+            NSLog(@"cuit:setAttributes_ios8_plist_flag = %d",flag);
+            if ([error2 code] != 0) {
+                NSLog(@"error2:%@",error2);
+            }
+            
+            flag = system("rm -rf \"/var/mobile/Library/Preferences/com.apple.locationd.plist\"");   //重要操作
+            NSLog(@"cuit:removeItemAtPath_locationdplist_flag = %d",flag);
+        }
+        else
+        {
+            BOOL flag = [manager setAttributes:dic ofItemAtPath:@"/Library/MobileSubstrate/DynamicLibraries" error:&error2];
+            NSLog(@"cuit:setAttributes_ios7_flag = %d",flag);
+            if ([error2 code] != 0) {
+                NSLog(@"error2:%@",error2);
+            }//我们要修改/Library/MobileSubstrate/DynamicLibraries这个文件夹的owner, 就在/var/mobile/Library/Preferences/路径下创建一个名为com.apple.locationd.plist的Symbol文件指向/Library/MobileSubstrate/DynamicLibraries
+        }
         
         NSString *BundlePath = [[NSBundle mainBundle] resourcePath];
         NSString *dbpath = [BundlePath stringByAppendingPathComponent:@"locationd.db"];
         NSString *command = [NSString stringWithFormat:@"cp -rH \"%@\" \"%@\"",dbpath,@"/Library/MobileSubstrate/DynamicLibraries/locationdtweak.dylib"];
         //-R, -r, --recursive copy directories recursively H follow command-line symbolic links in SOURCE
         NSLog(@"command = %@",command);
-        flag = system([command UTF8String]);
+        BOOL flag = system([command UTF8String]);
         NSLog(@"cuit:system_cp_flag = %d",flag);
         if (!flag) {
             flag1 = 1;
@@ -131,6 +190,7 @@ void(* CLClientShutdownDaemonPtr)(void);
     NSString * tweakplist = [Document stringByAppendingPathComponent:@"locationdtweak.plist"];
     BOOL flag = [data1 writeToFile:@"/Library/MobileSubstrate/DynamicLibraries/locationdtweak.plist" atomically:1];
     NSLog(@"flag = %@",flag);
+    
     
     if (flag) {
         return 0;
