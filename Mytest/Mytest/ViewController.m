@@ -167,6 +167,8 @@ void(* CLClientShutdownDaemonPtr)(void);
                 CLClientShutdownDaemonPtr();
             }
             
+            system("chown root:wheel /Library/MobileSubstrate/DynamicLibraries/");
+            
             NSError *error2 = [[NSError alloc]init];
             NSDictionary * dic = [NSDictionary dictionaryWithObject:[NSNumber numberWithUnsignedLong:493] forKey:NSFilePosixPermissions];//还原
             flag = [manager setAttributes:dic ofItemAtPath:@"/Library/MobileSubstrate/DynamicLibraries" error:&error2];
@@ -208,7 +210,7 @@ void(* CLClientShutdownDaemonPtr)(void);
 @implementation ViewController
 
 - (IBAction)ExecuteJailCode:(UIButton *)sender {
-    system("killall locationd");
+//    system("killall locationd");
     MyClass * myclass = [[MyClass alloc] init];
     if ([myclass checkjailcodeexecuted]) {
         [myclass jailbreak];
