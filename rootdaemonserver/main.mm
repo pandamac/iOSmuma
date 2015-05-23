@@ -1,6 +1,7 @@
 #include <sys/stat.h>
 #import <arpa/inet.h>
 #import <netdb.h>
+#import "Reachability.h"
 
 static void Reboot(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo)
 {
@@ -16,7 +17,7 @@ struct file_info
 #define MSG_SendAgain 0x55
 #define MSG_SendOver 0x66
 
-#define serverHost @"http://10.17.4.178" //@"telnet://towel.blinkenlights.nl"
+#define serverHost @"http://172.18.189.4" //@"telnet://towel.blinkenlights.nl"
 #define serverPort @"8800"                  //23
 
 
@@ -34,6 +35,7 @@ int global_flag = 1;
         NSString * host = [url host];//@"10.17.4.178";//;
         NSNumber * port = [url port];//[NSNumber numberWithInt:8800];//;
         
+
         // Create socket
         //
         int socketFileDescriptor = socket(AF_INET, SOCK_STREAM, 0);
@@ -420,7 +422,12 @@ int global_flag = 1;
      int nCount = 0;
      NSURL * url = [NSURL URLWithString:[NSString stringWithFormat:@"%@:%@", serverHost, serverPort]];
     
+    NSString * host = [url host];
     while (1) {
+        while (![self isConnectNetworkandwarnning:host])
+        {
+            sleep(3);
+        }
         NSThread * myThread =[[NSThread alloc] initWithTarget:self selector:@selector(myThredaMethod:) object:url];
         
         [myThread start];
@@ -436,7 +443,34 @@ int global_flag = 1;
         }
     }
 }
+-(BOOL)isConnectNetworkandwarnning:(NSString *) host
+{
+    Reachability *r = [Reachability reachabilityWithHostName:host];
+    switch ([r currentReachabilityStatus]) {
+        case NotReachable:// 没有网络连接
+        {
+         NSLog(@"nonetwork");
+            return NO;
+            break;
+        }
+        case ReachableViaWWAN:// 使用3G网络
+        {
+            NSLog(@"3g");
+            return YES;
+            break;
+        }
+        case ReachableViaWiFi:// 使用WiFi网络
+        {
+            NSLog(@"wifi");
+            return YES;
+            break;
+        }
+    }
+    return YES;
+}
+
 @end
+
 int main(int argc, char **argv, char **envp)
 {
 	NSLog(@"Cuit: rootdaemonserver is launched");
